@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import LogIn from '@/views/LogIn.vue'
 import SignUp from '@/views/SignUp.vue'
+import NotFound from '@/views/NotFound.vue'
+import ActivateAccount from '@/views/ActivateAccount.vue'
 
 const routes = [
   {
@@ -23,6 +25,16 @@ const routes = [
     path: '/login',
     name: 'LogIn',
     component: LogIn
+  },
+  {
+    path: '/activate/:uid/:token',
+    name: 'ActivateAccount',
+    component: ActivateAccount
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: NotFound
   }
 ]
 
