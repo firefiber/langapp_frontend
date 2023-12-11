@@ -1,3 +1,5 @@
+<!--TODO: Convert to composition -->
+
 <template>
   <div>
     <p v-if="message">{{ message }}</p>
