@@ -1,4 +1,4 @@
-import { createApp } from 'vue'
+import { createApp, watch } from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
@@ -6,7 +6,6 @@ import axios from 'axios'
 
 axios.defaults.baseURL = 'http://localhost:8000'
 axios.interceptors.request.use(function (config) {
-  // Get CSRF token from the cookie
   const csrfToken = document.cookie.split('; ')
     .find(row => row.startsWith('csrftoken'))
     ?.split('=')[1]
@@ -19,4 +18,25 @@ axios.interceptors.request.use(function (config) {
   return Promise.reject(error)
 })
 
-createApp(App).use(store).use(router, axios).mount('#app')
+// Check authentication status before creating the app
+async function init () {
+  await store.dispatch('checkAuthStatus')
+
+  const app = createApp(App)
+
+  watch(() => store.state.isAuthenticated, (isAuthenticated) => {
+    if (isAuthenticated) {
+      if (router.currentRoute.value.path === '/') {
+        router.push('/practice')
+      }
+    } else {
+      if (router.currentRoute.value.path === '/practice') {
+        router.push('/')
+      }
+    }
+  })
+
+  app.use(store).use(router).mount('#app')
+}
+
+init()

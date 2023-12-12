@@ -1,30 +1,48 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '@/views/HomeView.vue'
-import LogIn from '@/views/LogIn.vue'
-import SignUp from '@/views/SignUp.vue'
+import LandingPage from '@/views/LandingPage.vue'
+import PracticePage from '@/views/PracticePage.vue'
+import ProfilePage from '@/views/ProfilePage.vue'
 import NotFound from '@/views/NotFound.vue'
 import ActivateAccount from '@/views/ActivateAccount.vue'
+import store from '@/store' // Import Vuex store
 
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: HomeView
+    name: 'Home',
+    component: LandingPage,
+    beforeEnter: (to, from, next) => {
+      // console.log(store.state.isAuthenticated)// Dispatch Vuex action
+      if (store.state.isAuthenticated) {
+        next('/practice') // If authenticated, redirect to PracticePage
+      } else {
+        next() // Otherwise, show LandingPage
+      }
+    }
   },
   {
-    path: '/about',
-    name: 'about',
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    path: '/practice',
+    name: 'Practice',
+    component: PracticePage,
+    beforeEnter: (to, from, next) => {
+      if (!store.state.isAuthenticated) {
+        next('/') // If not authenticated, redirect to LandingPage
+      } else {
+        next() // Otherwise, show PracticePage
+      }
+    }
   },
   {
-    path: '/signup',
-    name: 'SignUp',
-    component: SignUp
-  },
-  {
-    path: '/login',
-    name: 'LogIn',
-    component: LogIn
+    path: '/profile',
+    name: 'Profile',
+    component: ProfilePage,
+    beforeEnter: (to, from, next) => {
+      if (!store.state.isAuthenticated) {
+        next('/')
+      } else {
+        next()
+      }
+    }
   },
   {
     path: '/activate/:uid/:token',
