@@ -1,15 +1,18 @@
 // authenticationService.js
-import axios from 'axios'
+import axios from '@/services/axiosConfig'
+import config from '@/config'
 
 export async function login (username, password) {
-  return await axios.post('/user/login/', {
+  return await axios.post(config.BASE_AUTH_LOGIN, {
     username,
     password
   })
 }
 
 export async function checkAuthenticationStatus () {
-  return await axios.get('/user/session/', { withCredentials: true })
+  return await axios.get(config.BASE_AUTH_CHECK, { withCredentials: true })
 }
 
-// ... other functions like logout, etc.
+export async function getRoundManager () {
+  return await axios.get(config.BASE_REST_ROUNDMANAGER, { withCredentials: true })
+}

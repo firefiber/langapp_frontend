@@ -1,0 +1,19 @@
+const BASE = process.env.VUE_APP_BASE
+const BASE_AUTH = process.env.VUE_APP_AUTH_ROOT
+const BASE_REST = process.env.VUE_APP_REST_ROOT
+
+const BASE_AUTH_LOGIN = `${BASE_AUTH}${process.env.VUE_APP_AUTH_LOGIN}`
+const BASE_AUTH_CHECK = `${BASE_AUTH}${process.env.VUE_APP_AUTH_CHECK}`
+const BASE_REST_ROUNDMANAGER = `${BASE_REST}${process.env.VUE_APP_REST_ROUNDMANAGER}`
+
+const BASE_REST_COMPARE = `${BASE_REST}${process.env.VUE_APP_REST_COMPARE}`
+
+export default {
+  BASE,
+  BASE_AUTH,
+  BASE_REST,
+  BASE_AUTH_LOGIN,
+  BASE_AUTH_CHECK,
+  BASE_REST_ROUNDMANAGER,
+  BASE_REST_COMPARE
+}
