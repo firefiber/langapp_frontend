@@ -4,7 +4,7 @@ import PracticePage from '@/views/PracticePage.vue'
 import ProfilePage from '@/views/ProfilePage.vue'
 import NotFound from '@/views/NotFound.vue'
 import ActivateAccount from '@/views/ActivateAccount.vue'
-import store from '@/store' // Import Vuex store
+import store from '@/store'
 
 const routes = [
   {
@@ -13,7 +13,7 @@ const routes = [
     component: LandingPage,
     beforeEnter: (to, from, next) => {
       // console.log(store.state.isAuthenticated)// Dispatch Vuex action
-      if (store.state.isAuthenticated) {
+      if (store.state.auth.isAuthenticated) {
         next('/practice') // If authenticated, redirect to PracticePage
       } else {
         next() // Otherwise, show LandingPage
@@ -25,7 +25,7 @@ const routes = [
     name: 'Practice',
     component: PracticePage,
     beforeEnter: (to, from, next) => {
-      if (!store.state.isAuthenticated) {
+      if (!store.state.auth.isAuthenticated) {
         next('/') // If not authenticated, redirect to LandingPage
       } else {
         next() // Otherwise, show PracticePage
@@ -37,7 +37,7 @@ const routes = [
     name: 'Profile',
     component: ProfilePage,
     beforeEnter: (to, from, next) => {
-      if (!store.state.isAuthenticated) {
+      if (!store.state.auth.isAuthenticated) {
         next('/')
       } else {
         next()

@@ -14,5 +14,5 @@ export async function checkAuthenticationStatus () {
 }
 
 export async function getRoundManager () {
-  return await axios.get(config.BASE_REST_ROUNDMANAGER, { withCredentials: true })
+  return await axios.get(config.BASE_REST_PRACTICEROUND, { withCredentials: true })
 }

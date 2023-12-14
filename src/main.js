@@ -2,13 +2,14 @@ import { createApp, watch } from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import { requestAuthentication } from '@/services/dispatcher' // Import the dispatcher function
 
 async function init () {
-  await store.dispatch('checkAuthStatus')
+  await requestAuthentication() // Use the dispatcher function for authentication
 
   const app = createApp(App)
 
-  watch(() => store.state.isAuthenticated, (isAuthenticated) => {
+  watch(() => store.state.auth.isAuthenticated, (isAuthenticated) => {
     if (isAuthenticated) {
       if (router.currentRoute.value.path === '/') {
         router.push('/practice')
