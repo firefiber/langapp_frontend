@@ -3,8 +3,12 @@
     <aside class="sidebar words-list">
       <h2>WORD</h2>
       <ul>
-        <li v-for="(item, index) in recentWords" :key="index" :style="{ opacity: getOpacity(index) }">
-          {{ item.word }}
+        <li v-if="showPlaceholder" class="placeholder" :style="{ opacity: 0 }"></li>
+        <li v-else :style="{ opacity: getOpacity(0) }">
+          {{ displayedWord }}
+        </li>
+        <li v-for="(word, index) in recentWords" :key="index" :style="{ opacity: getOpacity(index + 1) }">
+          {{ word }}
         </li>
       </ul>
     </aside>
@@ -12,7 +16,7 @@
     <section class="main-content">
       <div class="sentence">
         <h2>SENTENCE</h2>
-        <p v-if="currentItem" class="sentence-content">{{ currentItem.sentence }}</p>
+        <p v-if="currentItem" class="sentence-content">{{ currentItem.translation }}</p>
       </div>
       <div class="translation-input">
         <h2>TRANSLATION</h2>
@@ -20,12 +24,15 @@
           id="translation"
           type="text"
           v-model="userTranslation"
+          :disabled="isNextPhase"
           placeholder="Type your translation here"
           class="translation-field"
         />
+        <div v-if="inputError" class="error">{{ inputError }}</div>
         <button @click="handleButtonClick" class="submit-button">{{ isNextPhase ? 'Next' : 'Submit' }}</button>
+        <div v-if="permissionError" class="error">{{ permissionError }}</div>
+        <div v-if="generalError" class="error">{{ generalError }}</div>
       </div>
-      <div v-if="inputError" class="error">{{ inputError }}</div>
     </section>
 
     <aside class="sidebar results">
@@ -52,30 +59,27 @@ onBeforeMount(() => {
 const userTranslation = ref('')
 const isNextPhase = ref(false)
 const inputError = ref('')
+const displayedWord = ref('')
+const recentWords = ref([])
+const showPlaceholder = ref(true)
 
 const buffer = computed(() => store.state.session.buffer)
 const currentItem = computed(() => buffer.value[0] || null)
 const comparisonResult = computed(() => store.state.session.comparisonResult)
-// const permissionError = computed(() => store.getters['error/permissionError'])
-// const generalError = computed(() => store.getters['error/generalError'])
+const permissionError = computed(() => store.getters['error/permissionError'])
+const generalError = computed(() => store.getters['error/generalError'])
 
-watch(buffer, (newBuffer) => {
-  if (newBuffer.length <= 5) {
+watch(() => buffer.value.length, (newBuffer) => {
+  if (newBuffer <= 5) {
     getSession()
   }
 }, { immediate: true })
-
-const recentWords = computed(() => {
-  return buffer.value.slice(-15).reverse().map(item => ({
-    word: item.word
-  }))
-})
 
 const maxOpacity = 1
 const minOpacity = 0.1
 
 const getOpacity = (index) => {
-  const totalItems = recentWords.value.length
+  const totalItems = recentWords.value.length + (displayedWord.value ? 1 : 0)
   const opacityStep = (maxOpacity - minOpacity) / Math.max(totalItems - 1, 1)
   return Math.max(maxOpacity - index * opacityStep, minOpacity).toString()
 }
@@ -84,19 +88,30 @@ const handleButtonClick = async () => {
   if (!isNextPhase.value) {
     inputError.value = validators.validateInput(userTranslation.value)
     if (inputError.value) return
-
     try {
-      await sendSentenceComparison(userTranslation.value, currentItem.value.sentence)
-      userTranslation.value = ''
+      displayedWord.value = currentItem.value ? currentItem.value.word : ''
+      showPlaceholder.value = false
       isNextPhase.value = true
-    } catch (error) {}
+      await sendSentenceComparison(userTranslation.value, currentItem.value.sentence)
+    } catch (error) {
+    }
   } else {
-    isNextPhase.value = false
-    await store.dispatch('session/popCompletedBufferItem')
-    await store.dispatch('session/clearComparisonResult')
+    if (displayedWord.value) {
+      if (displayedWord.value) {
+        recentWords.value.unshift(displayedWord.value)
+        if (recentWords.value.length > 10) {
+          recentWords.value.pop()
+        }
+      }
+      userTranslation.value = ''
+      displayedWord.value = ''
+      showPlaceholder.value = true
+      isNextPhase.value = false
+      await store.dispatch('session/popCompletedBufferItem')
+      await store.dispatch('session/clearComparisonResult')
+    }
   }
 }
-
 </script>
 
 <style scoped>
@@ -106,7 +121,7 @@ const handleButtonClick = async () => {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  height: 100vh;
+  height: 100%;
   margin: 0 auto;
   max-width: 1200px;
   gap: 1rem;
@@ -175,6 +190,7 @@ h2{
   font-size: clamp(1rem, 1.2vw, 1.5rem);
   color: #DADADA;
   margin-bottom: 2rem;
+  font-weight: lighter;
 }
 
 li, p{

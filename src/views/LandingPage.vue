@@ -54,7 +54,7 @@ h1{
   font-size: 1rem;
   border-radius: 0.3rem;
   border: none;
-  width: 100%; /
+  width: 100%;
 }
 
 .login-button {
