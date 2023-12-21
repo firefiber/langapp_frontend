@@ -5,7 +5,7 @@ import config from '@/config'
 axios.defaults.baseURL = config.BASE
 console.log(axios.defaults.baseURL)
 
-// Add a request interceptor
+// Add a request interceptor, to send the csrftoken with each request, if it exists.
 axios.interceptors.request.use(function (config) {
   const csrfToken = document.cookie.split('; ')
     .find(row => row.startsWith('csrftoken'))

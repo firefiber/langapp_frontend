@@ -33,5 +33,5 @@ const userProfile = computed(() => {
 </script>
 
 <style scoped>
-/* Your styles */
+
 </style>

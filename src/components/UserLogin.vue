@@ -1,27 +1,22 @@
 <template>
   <div class="login-container">
-    <h2>Login</h2>
-    <form @submit.prevent="submitLogin">
-      <!-- Username Field -->
-      <div>
-        <label for="username">Username:</label>
+    <h2>Sign In</h2>
+    <form @submit.prevent="submitLogin" class="login-form">
+      <div class="input-group">
+        <label for="username">Username</label>
         <input type="text" id="username" v-model="username">
         <div v-if="validationError.username" class="error">{{ validationError.username }}</div>
       </div>
-
-      <!-- Password Field -->
-      <div>
-        <label for="password">Password:</label>
+      <div class="input-group">
+        <label for="password">Password</label>
         <input type="password" id="password" v-model="password">
         <div v-if="validationError.password" class="error">{{ validationError.password }}</div>
+        <button type="button" class="forgot-password">Forgot Password?</button>
       </div>
-
-      <!-- Login Error Display -->
       <div v-if="credentialError" class="error">{{ credentialError }}</div>
       <div v-if="notFoundError" class="error">{{ notFoundError }}</div>
-      <div v-if="generalError" class="error">An error occurred. Please try again.</div>
-
-      <button type="submit">Login</button>
+      <div v-if="generalError" class="error">{{ generalError }}</div>
+      <button type="submit" class="login-button">Sign in</button>
     </form>
   </div>
 </template>
@@ -56,60 +51,73 @@ const submitLogin = async () => {
 </script>
 
 <style scoped>
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #1D1D1D;
+  color: #E2E2E2;
+  font-family: 'Inter', sans-serif;
+}
+
+h2 {
+  font-weight: 400;
+  font-size: clamp(1.5rem, 2.5vw, 3rem);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  width: clamp(300px, 50vw, 500px);
+}
+
+.input-group {
+  margin-bottom: 1rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 300;
+  font-size: clamp(0.8rem, 1.5vw, 1.25rem);
+}
+
+input {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  background: none;
+  border: 1px solid #E2E2E2;
+  color: inherit;
+  font-size: clamp(0.8rem, 1.5vw, 1.25rem);
+}
+
+.forgot-password {
+  background: none;
+  color: #8BE0E5;
+  border: none;
+  cursor: pointer;
+  font-weight: 400;
+  text-align: left;
+  font-size: clamp(0.8rem, 1.5vw, 1.25rem);
+  margin-top: 0.5rem;
+}
+
+.login-button {
+  background-color: #8BE0E5;
+  color: #1D1D1D;
+  padding: 0.75rem;
+  border: none;
+  cursor: pointer;
+  font-weight: 400;
+  font-size: clamp(0.8rem, 1.5vw, 1.25rem);
+  width: 100%;
+}
+
 .error {
   color: red;
-  /* Additional styling for error messages */
+  font-size: clamp(0.6rem, 1vw, 0.8rem);
 }
 </style>
-
-<!--<template>-->
-<!--  <div class="login-container">-->
-<!--    <h2>Login</h2>-->
-<!--    <form @submit.prevent="submitLogin">-->
-<!--      <div>-->
-<!--        <label for="username">Username:</label>-->
-<!--        <input type="text" id="username" v-model="username" required />-->
-<!--      </div>-->
-<!--      <div>-->
-<!--        <label for="password">Password:</label>-->
-<!--        <input type="password" id="password" v-model="password" required />-->
-<!--      </div>-->
-<!--      <div v-if="loginError" class="error">-->
-<!--        {{ loginError }}-->
-<!--      </div>-->
-<!--      <button type="submit">Login</button>-->
-<!--    </form>-->
-<!--    <a href="#" @click="forgotPassword">Forgot Password?</a>-->
-<!--  </div>-->
-<!--</template>-->
-
-<!--<script setup>-->
-<!--import { ref, computed } from 'vue'-->
-<!--import { useStore } from 'vuex'-->
-<!--import { sendAuthorization } from '@/services/dispatcher'-->
-
-<!--const store = useStore()-->
-<!--const username = ref('')-->
-<!--const password = ref('')-->
-
-<!--const loginError = computed(() => {-->
-<!--  return store.getters['error/getClientError'](401)-->
-<!--})-->
-
-<!--const submitLogin = async () => {-->
-<!--  try {-->
-<!--    await sendAuthorization(username.value, password.value)-->
-<!--    store.dispatch('error/clearClientErrors')-->
-<!--  } catch (error) {-->
-
-<!--  }-->
-<!--}-->
-
-<!--// ...forgotPassword logic...-->
-<!--</script>-->
-
-<!--<style scoped>-->
-<!--.error {-->
-<!--  color: red;-->
-<!--}-->
-<!--</style>-->

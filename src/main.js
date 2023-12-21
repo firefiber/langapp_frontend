@@ -5,7 +5,7 @@ import store from './store'
 import { sendAuthentication } from '@/services/dispatcher'
 import Navbar from '@/components/Navbar.vue'
 
-import 'bootstrap/dist/css/bootstrap.min.css' // Import the dispatcher function
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 async function init () {
   try {

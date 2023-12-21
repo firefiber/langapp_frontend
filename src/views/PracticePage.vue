@@ -1,7 +1,7 @@
 <template>
-  <div class="practice-page">
+  <div class="practice-container">
     <aside class="sidebar words-list">
-      <h2>WORDS</h2>
+      <h2>WORD</h2>
       <ul>
         <li v-for="(item, index) in recentWords" :key="index" :style="{ opacity: getOpacity(index) }">
           {{ item.word }}
@@ -12,23 +12,25 @@
     <section class="main-content">
       <div class="sentence">
         <h2>SENTENCE</h2>
-        <!-- Display the sentence from the current item -->
-        <p v-if="currentItem">{{ currentItem.translation }}</p>
+        <p v-if="currentItem" class="sentence-content">{{ currentItem.sentence }}</p>
       </div>
       <div class="translation-input">
-        <input
+        <h2>TRANSLATION</h2>
+        <textarea
+          id="translation"
           type="text"
           v-model="userTranslation"
           placeholder="Type your translation here"
+          class="translation-field"
         />
-        <button @click="handleButtonClick">{{ isNextPhase ? 'Next' : 'Submit' }}</button>
+        <button @click="handleButtonClick" class="submit-button">{{ isNextPhase ? 'Next' : 'Submit' }}</button>
       </div>
       <div v-if="inputError" class="error">{{ inputError }}</div>
     </section>
 
     <aside class="sidebar results">
       <h2>RESULT</h2>
-      <div v-if="comparisonResult" class="comparison-result">
+      <div v-if="comparisonResult">
         <p>{{ comparisonResult }}</p>
       </div>
     </aside>
@@ -64,8 +66,7 @@ watch(buffer, (newBuffer) => {
 }, { immediate: true })
 
 const recentWords = computed(() => {
-  // Reverse the buffer to get the latest words at the top and slice the last 10
-  return buffer.value.slice(-10).reverse().map(item => ({
+  return buffer.value.slice(-15).reverse().map(item => ({
     word: item.word
   }))
 })
@@ -87,10 +88,10 @@ const handleButtonClick = async () => {
     try {
       await sendSentenceComparison(userTranslation.value, currentItem.value.sentence)
       userTranslation.value = ''
-      isNextPhase.value = true // Move to next phase after submission
+      isNextPhase.value = true
     } catch (error) {}
   } else {
-    isNextPhase.value = false // Reset for next item
+    isNextPhase.value = false
     await store.dispatch('session/popCompletedBufferItem')
     await store.dispatch('session/clearComparisonResult')
   }
@@ -99,79 +100,104 @@ const handleButtonClick = async () => {
 </script>
 
 <style scoped>
-html, body {
-  height: 100%;
-  margin: 0;
-}
 
-.practice-page {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(min-content, 1fr));
-  gap: 20px;
-  margin: 0 9.375rem;
-  align-items: start;
+.practice-container {
+  color: #E2E2E2;
+  display: flex;
   justify-content: center;
-  height: calc(100vh - 9.375rem * 2);
+  align-items: flex-start;
+  height: 100vh;
+  margin: 0 auto;
+  max-width: 1200px;
+  gap: 1rem;
+  padding-top: 10%;
 }
 
-.words-list, .results {
-  padding: 1rem;
-  min-width: 250px;
-  position: relative;
+.sidebar {
+  border-radius: 0.5rem;
+  width: 25%;
+  box-sizing: border-box;
 }
 
 .main-content {
   display: flex;
   flex-direction: column;
-  justify-content: start;
-  min-width: 500px;
+  width: 50%;
+  box-sizing: border-box;
+  align-items: flex-start;
+  justify-content: left;
 }
 
-h2 {
-  font-size: clamp(1rem, 2vw, 2rem);
+.sentence{
+  margin-bottom: 5rem;
 }
 
-p, li {
-  font-size: clamp(0.8rem, 1.5vw, 1.25rem);
+.results {
+  width: 25%;
+  box-sizing: border-box;
 }
 
-.sentence h2, .translation-input {
-  margin-bottom: 0.5rem;
+.translation-input {
+  width: 100%;
+  margin: 1rem 0;
 }
 
-.sentence p {
-  font-size: 1.25rem;
+.translation-field {
+  width: 100%;
+  min-height: 100px;
+  padding: 0.4rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #E2E2E2;
+  background-color: #E2E2E2;
+  font-size: 1rem;
+}
+
+.submit-button {
+  width: 100%;
+  background-color: #8BE0E5;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+}
+
+ul{
+  list-style: none;
+  padding: 0;
+}
+
+li{
+  margin: 0.2rem 0;
+}
+
+h2{
+  font-size: clamp(1rem, 1.2vw, 1.5rem);
+  color: #DADADA;
   margin-bottom: 2rem;
 }
 
-.translation-input input {
-  width: 100%;
-  margin-bottom: 1rem;
+li, p{
+  font-size: clamp(2.2rem, 2.625vw, 2.625rem);
 }
 
-.sidebar h2 {
-  margin-bottom: 1rem;
+li:not(:first-child) {
+  font-size: clamp(1.1rem, 1.5rem, 1.5rem);
 }
 
 .error {
   color: red;
 }
 
-ul {
-  padding: 0;
-  list-style: none;
-}
-
-li {
+label {
+  display: block;
+  color: #E2E2E2;
   margin-bottom: 0.5rem;
 }
 
 @media (max-width: 900px) {
-  .practice-page {
-    grid-template-columns: 1fr;
-    gap: 0;
-    margin: 0 3.125rem;
-    height: auto;
+  .practice-container {
+    flex-direction: column;
   }
 
   .words-list {
@@ -179,15 +205,8 @@ li {
   }
 
   .main-content, .results {
-    width: 100%;
-  }
-
-  h2 {
-    font-size: 4vw;
-  }
-
-  p, li {
-    font-size: 3vw;
+    width: 80%;
+    margin: 0 auto;
   }
 }
 </style>

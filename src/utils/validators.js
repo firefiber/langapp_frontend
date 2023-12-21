@@ -65,37 +65,3 @@ const validators = {
 }
 
 export default validators
-
-// const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-//
-// const validators = {
-//   validateUsername: (username) => {
-//     if (!username) return 'Username is required.'
-//     if (username.length < 3) return 'Username must be at least 3 characters long.'
-//     return ''
-//   },
-//
-//   validateEmail: (email) => {
-//     if (!email) return 'Email is required.'
-//     if (!emailRegex.test(email)) return 'Email is invalid.'
-//     return ''
-//   },
-//
-//   validatePassword: (password) => {
-//     if (!password) return 'Password is required.'
-//     if (password.length < 6) return 'Password must be at least 6 characters long.'
-//     return ''
-//   },
-//
-//   validateDropdown: (selection, field) => {
-//     if (!selection) return `${field} is required.`
-//     return ''
-//   },
-//
-//   validateInput: (input) => {
-//     if (!input.trim()) return 'Input cannot be blank.'
-//     return ''
-//   }
-// }
-//
-// export default validators

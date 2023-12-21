@@ -13,6 +13,5 @@ const email = ref('')
 const password = ref('')
 
 const handleUpdateCredentials = () => {
-  // Implement update credentials logic here
 }
 </script>
