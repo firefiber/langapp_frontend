@@ -1,11 +1,15 @@
 import { createStore } from 'vuex'
-import auth from './auth'
+import user from './user'
+import error from './error'
 import session from './session'
+import training from './training'
 
 const store = createStore({
   modules: {
-    auth,
-    session
+    user,
+    error,
+    session,
+    training
   }
 })
 
@@ -118,7 +122,7 @@ export default store
 //       state.isAuthenticated = status
 //     },
 //
-//     UPDATE_PRACTICE_SESSION_BUFFER (state, newItems) {
+//     REFILL_PRACTICE_SESSION_BUFFER (state, newItems) {
 //       state.PRACTICE_SESSION.buffer = state.PRACTICE_SESSION.buffer.concat(newItems)
 //       localStorage.setItem('PRACTICE_SESSION', JSON.stringify(state.PRACTICE_SESSION))
 //     }
@@ -129,8 +133,8 @@ export default store
 //       commit('SET_AUTHENTICATION_STATUS', status)
 //     },
 //
-//     updatePracticeSessionBuffer ({ commit }, newItems) {
-//       commit('UPDATE_PRACTICE_SESSION_BUFFER', newItems)
+//     refillPracticeSessionBuffer ({ commit }, newItems) {
+//       commit('REFILL_PRACTICE_SESSION_BUFFER', newItems)
 //     }
 //   }
 // })

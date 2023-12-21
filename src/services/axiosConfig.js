@@ -19,5 +19,4 @@ axios.interceptors.request.use(function (config) {
   return Promise.reject(error)
 })
 
-// Optionally export the configured Axios instance
 export default axios

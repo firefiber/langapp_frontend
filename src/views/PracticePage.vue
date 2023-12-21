@@ -1,154 +1,193 @@
 <template>
-  <div>
-    <button @click="fetchOrSubmit">Fetch/Submit</button>
+  <div class="practice-page">
+    <aside class="sidebar words-list">
+      <h2>WORDS</h2>
+      <ul>
+        <li v-for="(item, index) in recentWords" :key="index" :style="{ opacity: getOpacity(index) }">
+          {{ item.word }}
+        </li>
+      </ul>
+    </aside>
 
-    <div v-if="bufferItem">
-      <p>{{ bufferItem.sentence }}</p>
-    </div>
+    <section class="main-content">
+      <div class="sentence">
+        <h2>SENTENCE</h2>
+        <!-- Display the sentence from the current item -->
+        <p v-if="currentItem">{{ currentItem.translation }}</p>
+      </div>
+      <div class="translation-input">
+        <input
+          type="text"
+          v-model="userTranslation"
+          placeholder="Type your translation here"
+        />
+        <button @click="handleButtonClick">{{ isNextPhase ? 'Next' : 'Submit' }}</button>
+      </div>
+      <div v-if="inputError" class="error">{{ inputError }}</div>
+    </section>
 
-    <button @click="sendTestRequest">Send Test Request</button>
+    <aside class="sidebar results">
+      <h2>RESULT</h2>
+      <div v-if="comparisonResult" class="comparison-result">
+        <p>{{ comparisonResult }}</p>
+      </div>
+    </aside>
   </div>
 </template>
 
-<script>
-import { mapState } from 'vuex'
-import axios from '@/services/axiosConfig'
-import config from '@/config'
+<script setup>
+import { computed, ref, onBeforeMount, watch } from 'vue'
+import { useStore } from 'vuex'
+import { sendSentenceComparison, getSession } from '@/services/dispatcher'
+import validators from '@/utils/validators'
 
-export default {
-  computed: {
-    ...mapState('session', {
-      bufferItem: state => state.practiceSession.buffer && state.practiceSession.buffer[0]
-    })
-  },
-  methods: {
-    fetchOrSubmit () {
-      if (this.bufferItem) {
-        // Replace with the appropriate action for submitting translation
-      } else {
-        this.$store.dispatch('session/fetchPracticeSession')
-      }
-    },
-    async sendTestRequest () {
-      if (this.bufferItem) {
-        try {
-          const userSentence = '¿Dónde estudio?' // Replace with a test sentence in Spanish
-          const correctSentence = '¿Dónde estudio?' // Sentence from the buffer
+const store = useStore()
 
-          const response = await axios.post(config.BASE_REST_COMPARE, {
-            user_sentence: userSentence,
-            original_sentence: correctSentence
-          }, {
-            headers: {
-              'Content-Type': 'application/json; charset=utf-8'
-            },
-            withCredentials: true // If your API requires authentication
-          })
+onBeforeMount(() => {
+  store.dispatch('error/clearClientErrors')
+})
 
-          console.log('Test Request Response:', response.data)
-        } catch (error) {
-          console.error('Error sending test request:', error)
-        }
-      }
-    }
+const userTranslation = ref('')
+const isNextPhase = ref(false)
+const inputError = ref('')
+
+const buffer = computed(() => store.state.session.buffer)
+const currentItem = computed(() => buffer.value[0] || null)
+const comparisonResult = computed(() => store.state.session.comparisonResult)
+// const permissionError = computed(() => store.getters['error/permissionError'])
+// const generalError = computed(() => store.getters['error/generalError'])
+
+watch(buffer, (newBuffer) => {
+  if (newBuffer.length <= 5) {
+    getSession()
+  }
+}, { immediate: true })
+
+const recentWords = computed(() => {
+  // Reverse the buffer to get the latest words at the top and slice the last 10
+  return buffer.value.slice(-10).reverse().map(item => ({
+    word: item.word
+  }))
+})
+
+const maxOpacity = 1
+const minOpacity = 0.1
+
+const getOpacity = (index) => {
+  const totalItems = recentWords.value.length
+  const opacityStep = (maxOpacity - minOpacity) / Math.max(totalItems - 1, 1)
+  return Math.max(maxOpacity - index * opacityStep, minOpacity).toString()
+}
+
+const handleButtonClick = async () => {
+  if (!isNextPhase.value) {
+    inputError.value = validators.validateInput(userTranslation.value)
+    if (inputError.value) return
+
+    try {
+      await sendSentenceComparison(userTranslation.value, currentItem.value.sentence)
+      userTranslation.value = ''
+      isNextPhase.value = true // Move to next phase after submission
+    } catch (error) {}
+  } else {
+    isNextPhase.value = false // Reset for next item
+    await store.dispatch('session/popCompletedBufferItem')
+    await store.dispatch('session/clearComparisonResult')
   }
 }
+
 </script>
 
-<!--<template>-->
-<!--  <div>-->
-<!--    &lt;!&ndash; Existing button for fetching or submitting &ndash;&gt;-->
-<!--    <button @click="fetchOrSubmit">Fetch/Submit</button>-->
+<style scoped>
+html, body {
+  height: 100%;
+  margin: 0;
+}
 
-<!--    &lt;!&ndash; Display the first item of the buffer if it exists &ndash;&gt;-->
-<!--    <div v-if="bufferItem">-->
-<!--      &lt;!&ndash; Translation item display logic &ndash;&gt;-->
-<!--      <p>{{ bufferItem.sentence }}</p>-->
-<!--    </div>-->
+.practice-page {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(min-content, 1fr));
+  gap: 20px;
+  margin: 0 9.375rem;
+  align-items: start;
+  justify-content: center;
+  height: calc(100vh - 9.375rem * 2);
+}
 
-<!--    &lt;!&ndash; New button for sending test request &ndash;&gt;-->
-<!--    <button @click="sendTestRequest">Send Test Request</button>-->
-<!--  </div>-->
-<!--</template>-->
+.words-list, .results {
+  padding: 1rem;
+  min-width: 250px;
+  position: relative;
+}
 
-<!--<script>-->
-<!--import axios from '@/services/axiosConfig' // Import axios for making HTTP requests-->
-<!--import { mapState } from 'vuex'-->
-<!--import config from '@/config'-->
+.main-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  min-width: 500px;
+}
 
-<!--export default {-->
-<!--  computed: {-->
-<!--    ...mapState({-->
-<!--      bufferItem: state => state.PRACTICE_SESSION.buffer && state.PRACTICE_SESSION.buffer[0]-->
-<!--    })-->
-<!--  },-->
-<!--  methods: {-->
-<!--    fetchOrSubmit () {-->
-<!--      if (this.bufferItem) {-->
-<!--        this.$store.dispatch('submitTranslation')-->
-<!--      } else {-->
-<!--        this.$store.dispatch('getPracticeSession')-->
-<!--      }-->
-<!--    },-->
-<!--    async sendTestRequest () {-->
-<!--      if (this.bufferItem) {-->
-<!--        try {-->
-<!--          const userSentence = '¿Dónde estudio?' // Replace with a test sentence in Spanish-->
-<!--          const correctSentence = '¿Dónde estudio?' // Sentence from the buffer-->
+h2 {
+  font-size: clamp(1rem, 2vw, 2rem);
+}
 
-<!--          const response = await axios.post(config.BASE_REST_COMPARE, {-->
-<!--            user_sentence: userSentence,-->
-<!--            original_sentence: correctSentence-->
-<!--          }, {-->
-<!--            headers: {-->
-<!--              'Content-Type': 'application/json; charset=utf-8'-->
-<!--            },-->
-<!--            withCredentials: true // If your API requires authentication-->
-<!--          })-->
+p, li {
+  font-size: clamp(0.8rem, 1.5vw, 1.25rem);
+}
 
-<!--          console.log('Test Request Response:', response.data)-->
-<!--        } catch (error) {-->
-<!--          console.error('Error sending test request:', error)-->
-<!--        }-->
-<!--      }-->
-<!--    }-->
-<!--  }-->
-<!--}-->
-<!--</script>-->
+.sentence h2, .translation-input {
+  margin-bottom: 0.5rem;
+}
 
-<!--<template>-->
-<!--  <div>-->
-<!--    &lt;!&ndash; Always display the button &ndash;&gt;-->
-<!--    <button @click="fetchOrSubmit">Fetch/Submit</button>-->
+.sentence p {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+}
 
-<!--    &lt;!&ndash; Display the first item of the buffer if it exists &ndash;&gt;-->
-<!--    <div v-if="bufferItem">-->
-<!--      &lt;!&ndash; Translation item display logic &ndash;&gt;-->
-<!--      <p>{{ bufferItem.sentence }}</p>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</template>-->
+.translation-input input {
+  width: 100%;
+  margin-bottom: 1rem;
+}
 
-<!--<script>-->
-<!--import { mapState } from 'vuex'-->
+.sidebar h2 {
+  margin-bottom: 1rem;
+}
 
-<!--export default {-->
-<!--  computed: {-->
-<!--    ...mapState({-->
-<!--      bufferItem: state => state.PRACTICE_SESSION.buffer && state.PRACTICE_SESSION.buffer[0]-->
-<!--    })-->
-<!--  },-->
-<!--  methods: {-->
-<!--    fetchOrSubmit () {-->
-<!--      // Check if there is data in the buffer-->
-<!--      if (this.bufferItem) {-->
-<!--        // If there is, submit the current item-->
-<!--        this.$store.dispatch('submitTranslation')-->
-<!--      } else {-->
-<!--        // If not, fetch the practice session-->
-<!--        this.$store.dispatch('getPracticeSession')-->
-<!--      }-->
-<!--    }-->
-<!--  }-->
-<!--}-->
-<!--</script>-->
+.error {
+  color: red;
+}
+
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+li {
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 900px) {
+  .practice-page {
+    grid-template-columns: 1fr;
+    gap: 0;
+    margin: 0 3.125rem;
+    height: auto;
+  }
+
+  .words-list {
+    display: none;
+  }
+
+  .main-content, .results {
+    width: 100%;
+  }
+
+  h2 {
+    font-size: 4vw;
+  }
+
+  p, li {
+    font-size: 3vw;
+  }
+}
+</style>

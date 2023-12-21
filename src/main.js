@@ -2,14 +2,19 @@ import { createApp, watch } from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import { requestAuthentication } from '@/services/dispatcher' // Import the dispatcher function
+import { sendAuthentication } from '@/services/dispatcher'
+import Navbar from '@/components/Navbar.vue'
+
+import 'bootstrap/dist/css/bootstrap.min.css' // Import the dispatcher function
 
 async function init () {
-  await requestAuthentication() // Use the dispatcher function for authentication
+  try {
+    await sendAuthentication()
+  } catch (error) {}
 
   const app = createApp(App)
 
-  watch(() => store.state.auth.isAuthenticated, (isAuthenticated) => {
+  watch(() => store.state.user.isAuthenticated, (isAuthenticated) => {
     if (isAuthenticated) {
       if (router.currentRoute.value.path === '/') {
         router.push('/practice')
@@ -20,6 +25,8 @@ async function init () {
       }
     }
   })
+
+  app.component('Navbar', Navbar)
 
   app.use(store).use(router).mount('#app')
 }
