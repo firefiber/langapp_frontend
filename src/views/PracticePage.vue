@@ -2,15 +2,15 @@
   <div class="practice-container">
     <aside class="sidebar words-list">
       <h2>WORD</h2>
-      <ul>
-        <li v-if="showPlaceholder" class="placeholder" :style="{ opacity: 0 }"></li>
-        <li v-else :style="{ opacity: getOpacity(0) }">
+      <transition-group name="slide" class="sidebar words-list" tag="ul">
+        <li v-if="showPlaceholder" class="placeholder" :key="'placeholder'" :style="{ opacity: 0 }"></li>
+        <li v-else :key="'displayedWord'" :style="{ opacity: getOpacity(0) }">
           {{ displayedWord }}
         </li>
         <li v-for="(word, index) in recentWords" :key="index" :style="{ opacity: getOpacity(index + 1) }">
           {{ word }}
         </li>
-      </ul>
+      </transition-group>
     </aside>
 
     <section class="main-content">
@@ -29,7 +29,7 @@
           class="translation-field"
         />
         <div v-if="inputError" class="error">{{ inputError }}</div>
-        <button @click="handleButtonClick" class="submit-button">{{ isNextPhase ? 'Next' : 'Submit' }}</button>
+        <button @click="handleButtonClick" class="submit-button" :disabled="isNextPhase && !comparisonResult">{{ isNextPhase ? 'Next' : 'Submit' }}</button>
         <div v-if="permissionError" class="error">{{ permissionError }}</div>
         <div v-if="generalError" class="error">{{ generalError }}</div>
       </div>
@@ -38,7 +38,13 @@
     <aside class="sidebar results">
       <h2>RESULT</h2>
       <div v-if="comparisonResult">
-        <p>{{ comparisonResult }}</p>
+        <h3>Score: {{ comparisonResult.similarity}}</h3>
+        <h3>Words</h3>
+        <transition-group name="list" tag="ul">
+          <li v-for="(wordScore, index) in comparisonResult.word_scores" :key="index">
+            {{ wordScore[0] }}: {{ wordScore[1] }}
+          </li>
+        </transition-group>
       </div>
     </aside>
   </div>
@@ -123,15 +129,18 @@ const handleButtonClick = async () => {
   align-items: flex-start;
   height: 100%;
   margin: 0 auto;
-  max-width: 1200px;
-  gap: 1rem;
+  max-width: 1400px;
+  gap: 2rem;
   padding-top: 10%;
 }
 
 .sidebar {
-  border-radius: 0.5rem;
   width: 25%;
   box-sizing: border-box;
+}
+
+.slide-move{
+  transition: transform 0.25s
 }
 
 .main-content {
@@ -150,6 +159,14 @@ const handleButtonClick = async () => {
 .results {
   width: 25%;
   box-sizing: border-box;
+}
+
+.list-enter-active, .list-leave-active {
+  transition: all 0.2s ease;
+}
+.list-enter, .list-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
 }
 
 .translation-input {
@@ -177,6 +194,10 @@ const handleButtonClick = async () => {
   cursor: pointer;
 }
 
+.submit-button:disabled{
+  background-color: rgba(157, 178, 180, 0.42);
+}
+
 ul{
   list-style: none;
   padding: 0;
@@ -193,7 +214,7 @@ h2{
   font-weight: lighter;
 }
 
-li, p{
+.sidebar>li, p{
   font-size: clamp(2.2rem, 2.625vw, 2.625rem);
 }
 

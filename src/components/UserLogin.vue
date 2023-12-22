@@ -1,6 +1,6 @@
 <template>
   <div class="login-container">
-    <h2>Sign In</h2>
+    <h3>Sign In</h3>
     <form @submit.prevent="submitLogin" class="login-form">
       <div class="input-group">
         <label for="username">Username</label>
@@ -17,17 +17,23 @@
       <div v-if="notFoundError" class="error">{{ notFoundError }}</div>
       <div v-if="generalError" class="error">{{ generalError }}</div>
       <button type="submit" class="login-button">Sign in</button>
+      <div class="registration-link">
+        <small>Don't have an account? <a href="#" @click.prevent="showRegistrationForm">Create one!</a></small>
+      </div>
     </form>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, defineEmits } from 'vue'
 import { useStore } from 'vuex'
 import validators from '@/utils/validators'
 import { sendAuthorization } from '@/services/dispatcher'
 
 const store = useStore()
+
+const emit = defineEmits(['showRegistrationForm'])
+
 const username = ref('')
 const password = ref('')
 const validationError = ref({})
@@ -48,6 +54,10 @@ const submitLogin = async () => {
     }
   }
 }
+
+const showRegistrationForm = () => {
+  emit('showRegistrationForm')
+}
 </script>
 
 <style scoped>
@@ -62,12 +72,13 @@ const submitLogin = async () => {
   font-family: 'Inter', sans-serif;
 }
 
-h2 {
+h3 {
   font-weight: 400;
   font-size: clamp(1.5rem, 2.5vw, 3rem);
 }
 
 .login-form {
+  padding-top: 50px;
   display: flex;
   flex-direction: column;
   width: clamp(300px, 50vw, 500px);
@@ -89,6 +100,7 @@ input {
   padding: 0.5rem;
   margin-bottom: 0.5rem;
   background: none;
+  border-radius: 0.5rem !important;
   border: 1px solid #E2E2E2;
   color: inherit;
   font-size: clamp(0.8rem, 1.5vw, 1.25rem);
@@ -101,7 +113,7 @@ input {
   cursor: pointer;
   font-weight: 400;
   text-align: left;
-  font-size: clamp(0.8rem, 1.5vw, 1.25rem);
+  font-size: clamp(0.8rem, 1.2vw, 1rem);
   margin-top: 0.5rem;
 }
 
@@ -110,6 +122,7 @@ input {
   color: #1D1D1D;
   padding: 0.75rem;
   border: none;
+  border-radius: 0.5rem;
   cursor: pointer;
   font-weight: 400;
   font-size: clamp(0.8rem, 1.5vw, 1.25rem);
@@ -120,4 +133,21 @@ input {
   color: red;
   font-size: clamp(0.6rem, 1vw, 0.8rem);
 }
+
+.registration-link, .login-link {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+@media (max-width: 900px) {
+  .input-group {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  label, input {
+    width: auto;
+  }
+}
+
 </style>
