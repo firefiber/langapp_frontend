@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark">
     <router-link class="navbar-brand" to="/">
-      <span class="brand-title">Speasy</span>
+      <span class="brand-title">/speasy</span>
     </router-link>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -10,12 +10,12 @@
       <ul class="navbar-nav ms-auto">
         <li class="nav-item" v-if="currentRouteName !== 'Practice'">
           <router-link class="nav-link" to="/practice">
-            <i class="bi bi-journal-check"></i> Practice
+            <i class="bi bi-journal-check"></i>
           </router-link>
         </li>
         <li class="nav-item" v-if="currentRouteName !== 'Profile'">
           <router-link class="nav-link" to="/profile">
-            <i class="bi bi-person-circle"></i> Profile
+            <i class="bi bi-person-circle"></i>
           </router-link>
         </li>
       </ul>
@@ -42,7 +42,7 @@ const currentRouteName = computed(() => route.name)
 }
 
 .brand-title {
-  font-size: clamp(2rem, 5vw, 3rem);
+  font-size: clamp(2rem, 5vw, 2rem);
   color: #E2E2E2;
 }
 

@@ -156,14 +156,10 @@ const handleButtonClick = async () => {
   margin-bottom: 5rem;
 }
 
-.results {
-  width: 25%;
-  box-sizing: border-box;
-}
-
 .list-enter-active, .list-leave-active {
   transition: all 0.2s ease;
 }
+
 .list-enter, .list-leave-to {
   opacity: 0;
   transform: translateY(-10px);
@@ -218,7 +214,7 @@ h2{
   font-size: clamp(2.2rem, 2.625vw, 2.625rem);
 }
 
-li:not(:first-child) {
+.sidebar>li:not(:first-child) {
   font-size: clamp(1.1rem, 1.5rem, 1.5rem);
 }
 

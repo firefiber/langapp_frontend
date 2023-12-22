@@ -1,11 +1,27 @@
 <template>
   <div class="profile-page">
-    <h2>User Profile</h2>
-    <p><strong>Username:</strong> {{ userProfile.username }}</p>
-    <p><strong>Learning Language:</strong> {{ userProfile.learningLanguage }}</p>
-    <p><strong>Native Language:</strong> {{ userProfile.nativeLanguage }}</p>
-    <p><strong>Proficiency:</strong> {{ userProfile.proficiency }}</p>
-    <p><strong>Words Learned:</strong> {{ userProfile.learnedWordCount }}</p>
+    <!-- Profile Section -->
+    <section class="profile-section">
+      <h1>@{{ username }}</h1>
+      <div class="profile-details">
+        <h2>Profile</h2>
+        <ul>
+          <li><strong>Native Language:</strong> {{ nativeLanguage }}</li>
+          <li><strong>Learning Languages:</strong> {{ learningLanguages }}</li>
+          <li><strong>Active Since:</strong> {{ activeSince }}</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Training Section -->
+    <section class="training-section">
+      <h2>{{ trainingSectionTitle }}</h2>
+      <ul>
+        <li><strong>Proficiency:</strong> {{ proficiency }}</li>
+        <li><strong>Word Bank Size:</strong> {{ wordBankCount }}</li>
+        <li><strong>Streak:</strong> {{ streak }}</li>
+      </ul>
+    </section>
   </div>
 </template>
 
@@ -15,23 +31,19 @@ import { useStore } from 'vuex'
 
 const store = useStore()
 
-const userProfile = computed(() => {
-  const userData = store.state.user
-  const trainingData = store.state.training
+const username = computed(() => store.state.user.username)
+const nativeLanguage = computed(() => store.state.user.nativeLanguage)
+const learningLanguages = computed(() => store.state.user.learningLanguages)
+const activeSince = computed(() => store.state.user.learningSince)
 
-  // Find the learning language marked as true
-  const learningLanguage = Object.keys(userData.learningLanguages).find(lang => userData.learningLanguages[lang] === true)
+const trainingSectionTitle = computed(() => Object.keys(store.state.user.learningLanguages)[0] + ' (Active)')
 
-  return {
-    username: userData.username,
-    learningLanguage: learningLanguage,
-    nativeLanguage: userData.nativeLanguage,
-    proficiency: trainingData.proficiency,
-    learnedWordCount: trainingData.wordBankCount
-  }
-})
+const proficiency = computed(() => store.state.training.proficiency)
+const wordBankCount = computed(() => store.state.training.wordBankCount)
+const streak = computed(() => store.state.training.streak)
 </script>
 
-<style scoped>
-
+<style>
+/* Add your base and specific CSS styles here */
+/* ... */
 </style>

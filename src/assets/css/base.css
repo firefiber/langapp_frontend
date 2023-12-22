@@ -1,0 +1,134 @@
+/* Base Stylesheet */
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 300;
+    font-size: clamp(0.8rem, 1.5vw, 1.25rem);
+}
+
+h3 {
+    font-weight: 400;
+    padding-bottom: 2rem;
+    font-size: clamp(1.5rem, 2.5vw, 2.5rem);
+}
+
+a {
+    color: #8BE5E5 !important;
+}
+
+i{
+    font-size: 2rem;
+}
+
+input, select {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    background: none;
+    border-radius: 0.5rem !important;
+    border: 1px solid #E2E2E2;
+    color: inherit;
+    font-size: clamp(0.8rem, 1.5vw, 1.25rem);
+}
+
+/* Container styles */
+.auth-container, .landing-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100vh;
+    background-color: #1D1D1D;
+    color: #E2E2E2;
+    font-family: 'Inter', sans-serif;
+    margin-top: 5rem;
+}
+
+/* Form and input group styles */
+.auth-form, .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    width: clamp(300px, 50vw, 500px);
+    margin-bottom: 1rem;
+}
+
+.input-group {
+    flex: 1;
+}
+
+/* Input and select styles */
+.auth-input {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    background: none;
+    border-radius: 0.5rem;
+    border: 1px solid #E2E2E2;
+    color: inherit;
+    font-size: clamp(0.8rem, 1.5vw, 1.25rem);
+}
+
+.auth-input:focus {
+    outline: 2px solid #8BE0E5; /* Focus style */
+}
+
+/* Button styles */
+
+.auth-button{
+    background-color: #8BE5E5;
+}
+
+.auth-button, .primary, .outline {
+    padding: 0.75rem;
+    font-size: clamp(0.8rem, 1.5vw, 1.25rem);
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+.auth-button.primary, .register-button {
+    background-color: #8BE0E5;
+    color: #1D1D1D;
+}
+
+.auth-button.outline, .login-button {
+    background-color: transparent;
+    color: #E2E2E2;
+    border: 1px solid #E2E2E2;
+}
+
+.auth-button:hover, .auth-button:focus {
+    background: #8BF2E5;
+}
+
+/* Link styles */
+.auth-link {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.auth-link a {
+    color: #8BE0E5;
+    text-decoration: none;
+}
+
+.auth-link a:hover {
+    text-decoration: underline;
+}
+
+/* Error message styles */
+.error {
+    color: red;
+    font-size: clamp(0.6rem, 1vw, 0.8rem);
+    margin-top: 0.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+    .language-group {
+        flex-direction: column;
+    }
+}
