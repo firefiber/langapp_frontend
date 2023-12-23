@@ -35,6 +35,21 @@ export const sendAuthorization = async (username, password) => {
 }
 
 /**
+ * Notifies server of user logout, clears user store, and session store.
+ */
+export const revokeAuthorization = async () => {
+  try {
+    const response = await endpoints.logout()
+    if (response.status === 200) {
+      await store.dispatch('user/resetUserData')
+      await store.dispatch('session/resetSession')
+    }
+  } catch (error) {
+    errorHandler(error)
+  }
+}
+
+/**
  * Checks user authentication status and updates Vuex store if authenticated.
  */
 export const sendAuthentication = async () => {

@@ -1,3 +1,5 @@
+<!--TODO: Logout triggering the watch on session wipe. -->
+
 <template>
   <div class="practice-container">
     <aside class="sidebar words-list">

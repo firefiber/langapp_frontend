@@ -2,8 +2,8 @@
   <div class="landing-page d-flex flex-column justify-content-center align-items-center" style="height: 100vh;">
     <h1>/speasy</h1>
     <div v-if="!showLogin && !showUserRegistration" class="button-container">
-      <button class="btn btn-primary login-button" @click="toggleForms('login')">Login</button>
-      <button class="btn btn-outline-primary register-button" @click="toggleForms('register')">Create Account</button>
+      <button class="auth-button" @click="toggleForms('login')">Login</button>
+      <button class="outline" @click="toggleForms('register')">Create Account</button>
     </div>
 
     <Login v-if="showLogin" @close="closeForms" @showRegistrationForm="handleShowRegistrationForm"/>
@@ -52,41 +52,27 @@ const handleShowRegistrationForm = () => {
   align-items: center;
   justify-content: center;
   height: 100vh;
-  width: clamp(300px, 50vw, 500px);
+  max-width: 500px;
   margin: 0 auto;
-  background-color: #1D1D1D;
-  color: #E2E2E2;
-  font-family: 'Inter', sans-serif;
+  padding: 0 20px;
 }
 
 h1 {
-  font-weight: 400;
-  font-size: clamp(1.5rem, 2.5vw, 3rem);
-  padding-top: 50px;
-  padding-bottom: 20px;
+  margin-top: 2rem;
+  margin-bottom: 5rem;
 }
 
-.btn {
-  font-family: 'Inter', sans-serif;
-  padding: 0.75rem;
-  font-size: clamp(0.8rem, 1.5vw, 1.25rem);
-  border-radius: 0.5rem;
-  border: 1px solid #E2E2E2;
-  margin-bottom: 1rem;
+.button-container {
   width: 100%;
-  cursor: pointer;
-  background-color: #8BE0E5;
-  color: #1D1D1D;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-.login-button:active, .register-button:active {
-  background-color: red;
-}
-
-@media (max-width: 900px) {
-  .landing-page {
-    width: auto;
-  }
+.outline{
+  background-color: transparent;
+  color: #E2E2E2;
+  border: 1px solid  #8BE0E5;
 }
 
 </style>

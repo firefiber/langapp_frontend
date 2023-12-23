@@ -119,7 +119,7 @@ select{
   }
 
   .input-group {
-    flex: none; /* Removes flex sizing for mobile view */
+    flex: none;
   }
 }
 

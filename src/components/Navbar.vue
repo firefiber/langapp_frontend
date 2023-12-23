@@ -9,14 +9,17 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
         <li class="nav-item" v-if="currentRouteName !== 'Practice'">
-          <router-link class="nav-link" to="/practice">
-            <i class="bi bi-journal-check"></i>
+          <router-link class="nav-link" to="/practice">Practice
+<!--            <i class="bi bi-journal-check"></i>-->
           </router-link>
         </li>
         <li class="nav-item" v-if="currentRouteName !== 'Profile'">
-          <router-link class="nav-link" to="/profile">
-            <i class="bi bi-person-circle"></i>
+          <router-link class="nav-link" to="/profile">Profile
+<!--            <i class="bi bi-person-circle"></i>-->
           </router-link>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" @click="logout">Logout</a>
         </li>
       </ul>
     </div>
@@ -26,9 +29,14 @@
 <script setup>
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { revokeAuthorization } from '@/services/dispatcher'
 
 const route = useRoute()
 const currentRouteName = computed(() => route.name)
+
+const logout = () => {
+  revokeAuthorization()
+}
 </script>
 
 <style scoped>
@@ -56,17 +64,9 @@ const currentRouteName = computed(() => route.name)
   margin-right: 0.5rem;
 }
 
-.navbar-toggler {
-  border-color: #E2E2E2;
-}
-
-.navbar-toggler-icon {
-  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='%23E2E2E2' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
-}
-
 @media (max-width: 900px) {
   .navbar-brand {
-    padding-left: 45px; /* Fixed padding on smaller screens */
+    padding-left: 45px;
   }
 }
 
@@ -76,30 +76,3 @@ const currentRouteName = computed(() => route.name)
   }
 }
 </style>
-
-<!--<template>-->
-<!--  <nav class="navbar navbar-expand-lg navbar-light fixed-top">-->
-<!--    <router-link class="navbar-brand" to="/">Speasy</router-link>-->
-<!--    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">-->
-<!--      <span class="navbar-toggler-icon"></span>-->
-<!--    </button>-->
-<!--    <div class="collapse navbar-collapse" id="navbarNav">-->
-<!--      <ul class="navbar-nav ml-auto w-100 justify-content-end">-->
-<!--        <li class="nav-item" v-if="currentRouteName !== 'Practice'">-->
-<!--          <router-link class="nav-link" to="/practice">Practice</router-link>-->
-<!--        </li>-->
-<!--        <li class="nav-item" v-if="currentRouteName !== 'Profile'">-->
-<!--          <router-link class="nav-link" to="/profile">Profile</router-link>-->
-<!--        </li>-->
-<!--      </ul>-->
-<!--    </div>-->
-<!--  </nav>-->
-<!--</template>-->
-
-<!--<script setup>-->
-<!--import { computed } from 'vue'-->
-<!--import { useRoute } from 'vue-router'-->
-
-<!--const route = useRoute()-->
-<!--const currentRouteName = computed(() => route.name)-->
-<!--</script>-->

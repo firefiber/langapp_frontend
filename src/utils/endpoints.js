@@ -17,6 +17,14 @@ export const login = async (username, password) => {
 }
 
 /**
+ * Sends a logout request to the server
+ * @return {Promise} A promise that resolves with the server's response
+ */
+export const logout = async () => {
+  return await axios.post(config.BASE_AUTH_LOGOUT, { withCredentials: true })
+}
+
+/**
  * Checks user authentication status with the server.
  * @returns {Promise} A promise that resolves with the server's response.
  */
