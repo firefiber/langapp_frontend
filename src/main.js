@@ -10,7 +10,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 
 async function init () {
   // Check for the existence of CSRF or session cookies before sending auth check
-  if (document.cookie.includes('csrftoken') || document.cookie.includes('sessionid')) {
+  if (document.cookie.includes('csrftoken') && document.cookie.includes('sessionid')) {
     try {
       await sendAuthentication()
     } catch (error) {}
