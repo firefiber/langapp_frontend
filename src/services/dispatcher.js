@@ -1,5 +1,9 @@
+// TODO: Training, profile data request sent immediately after login. Rework so it's on the profile page, maybe?
+// TODO: Logout redirect happening on the dispatcher, maybe put a watch?
+
 import store from '@/store'
 import * as endpoints from '@/utils/endpoints'
+import router from '@/router'
 
 /**
  * Service module for making API calls. Uses the Endpoints utility for the base call and adds extra params as needed.
@@ -28,6 +32,8 @@ export const sendAuthorization = async (username, password) => {
     const response = await endpoints.login(username, password)
     if (response.status === 200) {
       await store.dispatch('user/setAuthenticated', true)
+      getUserProfileData()
+      getUserTrainingData()
     }
   } catch (error) {
     errorHandler(error)
@@ -41,8 +47,9 @@ export const revokeAuthorization = async () => {
   try {
     const response = await endpoints.logout()
     if (response.status === 200) {
-      await store.dispatch('user/resetUserData')
-      await store.dispatch('session/resetSession')
+      store.dispatch('user/resetUserData')
+      store.dispatch('session/resetSession')
+      router.push('/')
     }
   } catch (error) {
     errorHandler(error)

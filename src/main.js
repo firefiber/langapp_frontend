@@ -3,7 +3,7 @@ import App from './App.vue'
 import '@/assets/css/base.css'
 import router from './router'
 import store from './store'
-import { getUserProfileData, getUserTrainingData, sendAuthentication } from '@/services/dispatcher'
+import { sendAuthentication } from '@/services/dispatcher'
 import Navbar from '@/components/Navbar.vue'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -13,8 +13,6 @@ async function init () {
   if (document.cookie.includes('csrftoken') || document.cookie.includes('sessionid')) {
     try {
       await sendAuthentication()
-      getUserProfileData()
-      getUserTrainingData()
     } catch (error) {}
   }
   const app = createApp(App)
