@@ -3,8 +3,7 @@ import config from '@/config'
 
 // Set Axios default base URL
 axios.defaults.baseURL = config.BASE
-// axios.defaults.withCredentials = true
-console.log(axios.defaults.baseURL)
+axios.defaults.withCredentials = true
 
 // Add a request interceptor, to send the csrftoken with each request, if it exists.
 axios.interceptors.request.use(function (config) {
