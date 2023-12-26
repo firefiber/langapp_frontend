@@ -32,8 +32,8 @@ export const sendAuthorization = async (username, password) => {
     const response = await endpoints.login(username, password)
     if (response.status === 200) {
       await store.dispatch('user/setAuthenticated', true)
-      getUserProfileData()
-      getUserTrainingData()
+      // getUserProfileData()
+      // getUserTrainingData()
     }
   } catch (error) {
     errorHandler(error)
