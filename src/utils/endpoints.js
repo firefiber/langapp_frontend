@@ -21,7 +21,7 @@ export const login = async (username, password) => {
  * @return {Promise} A promise that resolves with the server's response
  */
 export const logout = async () => {
-  return await axios.post(config.BASE_AUTH_LOGOUT)
+  return await axios.post(config.BASE_AUTH_LOGOUT, { withCredentials: true })
 }
 
 /**
@@ -29,7 +29,7 @@ export const logout = async () => {
  * @returns {Promise} A promise that resolves with the server's response.
  */
 export const authCheck = async () => {
-  return await axios.get(config.BASE_AUTH_CHECK)
+  return await axios.get(config.BASE_AUTH_CHECK, { withCredentials: true })
 }
 
 /**
@@ -46,7 +46,7 @@ export const createUser = async (userData) => {
  * @returns {Promise} A promise that resolves with the server's response.
  */
 export const practiceSession = async () => {
-  return await axios.get(config.BASE_REST_SESSION)
+  return await axios.get(config.BASE_REST_SESSION, { withCredentials: true })
 }
 
 /**
@@ -54,7 +54,7 @@ export const practiceSession = async () => {
  * @returns {Promise} A promise that resolves with the server's response.
  */
 export const userData = async () => {
-  return await axios.get(config.BASE_AUTH_DATA)
+  return await axios.get(config.BASE_AUTH_DATA, { withCredentials: true })
 }
 
 /**
@@ -62,7 +62,7 @@ export const userData = async () => {
  * @returns {Promise} A promise that resolves with the server's response.
  */
 export const userTrainingData = async () => {
-  return await axios.get(config.BASE_AUTH_TRAININGDATA)
+  return await axios.get(config.BASE_AUTH_TRAININGDATA, { withCredentials: true })
 }
 
 /**
@@ -75,7 +75,7 @@ export const compareSentences = async (userSentence, originalSentence) => {
   return await axios.post(config.BASE_REST_COMPARE, {
     user_sentence: userSentence,
     original_sentence: originalSentence
-  })
+  }, { withCredentials: true })
 }
 
 /**
