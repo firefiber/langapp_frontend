@@ -19,7 +19,6 @@ const customAxios = axios.create({
  */
 customAxios.interceptors.request.use(function (config) {
   const csrfToken = store.state.user.csrf_token // Retrieve csrf token from Vuex store
-  console.log('AXIOS INSTANCE: ' + csrfToken) // Log the current csrf token
   // Attach csrf token to request header if it exists
   if (csrfToken) {
     config.headers['X-CSRFToken'] = csrfToken

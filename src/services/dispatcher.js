@@ -19,7 +19,6 @@ import * as endpoints from '@/utils/endpoints'
 const errorHandler = (error) => {
   const statusCode = error.response ? error.response.status : 0
   const message = error.message || 'An error occurred'
-  console.log(message)
   store.dispatch('error/reportError', { message, statusCode })
 }
 
@@ -34,7 +33,6 @@ export const sendAuthorization = async (username, password) => {
     if (response.status === 200) {
       await store.dispatch('user/setAuthenticated', true)
       const csrfToken = response.data.csrfToken
-      console.log(response.data)
       await store.dispatch('user/setCsrfToken', csrfToken)
       await getUserTrainingData()
       await getUserProfileData()
@@ -69,7 +67,6 @@ export const sendAuthentication = async () => {
     if (response.status === 200) {
       await store.dispatch('user/setAuthenticated', true)
       const csrfToken = response.data.csrfToken
-      console.log(response.data)
       await store.dispatch('user/setCsrfToken', csrfToken)
       await getUserTrainingData()
       await getUserProfileData()

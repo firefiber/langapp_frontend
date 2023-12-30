@@ -32,7 +32,6 @@ const mutations = {
   // Sets the csrf token
   SET_CSRF_TOKEN (state, token) {
     state.csrf_token = token
-    console.log('USER STORE: ' + state.csrf_token)
   },
 
   // Resets the user data to its initial state.
