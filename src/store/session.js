@@ -4,9 +4,9 @@
  */
 
 const state = () => ({
-  buffer: JSON.parse(localStorage.getItem('PRACTICE_SESSION')) || [],
-  counter: 0,
-  comparisonResult: null
+  buffer: JSON.parse(localStorage.getItem('PRACTICE_SESSION')) || [], // Practice session buffer - retrieve from localstorage or create an empty array
+  counter: 0, // Counts the number of completed practice items.
+  comparisonResult: null // Holds the result of the last practice comparison.
 })
 
 const mutations = {
@@ -47,26 +47,27 @@ const mutations = {
 }
 
 const actions = {
+  // Commits mutation to refill the practice session buffer with new items.
   refillPracticeSessionBuffer ({ commit }, buffer) {
     commit('REFILL_PRACTICE_SESSION_BUFFER', buffer)
   },
-
+  // Commits mutation to remove the top item from the practice buffer.
   popCompletedBufferItem ({ commit }) {
     commit('POP_BUFFER_TOP')
   },
-
+  // Commits mutation to set the result of a sentence comparison.
   setComparisonResult ({ commit }, result) {
     commit('SET_COMPARISON_RESULT', result)
   },
-
+  // Commits mutation to clear the sentence comparison result.
   clearComparisonResult ({ commit }) {
     commit('CLEAR_COMPARISON_RESULT')
   },
-
+  // Commits mutation to reset the session to its initial state.
   resetSession ({ commit }) {
     commit('RESET_SESSION')
   },
-
+  // Commits mutation to increment the session counter.
   incrementCounter ({ commit }) {
     commit('INCREMENT_COUNTER')
   }

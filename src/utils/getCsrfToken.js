@@ -1,3 +1,5 @@
+// TODO: Remove, not used.
+
 /**
  * Extracts the CSRF token from the document cookies.
  * @return {string} The value of the CSRF token, or an empty string if not found.

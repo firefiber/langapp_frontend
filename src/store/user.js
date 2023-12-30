@@ -1,16 +1,17 @@
+import store from '@/store'
+
 /**
  * User profile and authentication store
  * Handles user-specific data such as authentication status, user details, and language preferences.
  */
-import store from '@/store'
 
 const state = {
-  username: '',
-  nativeLanguage: '',
-  learningLanguages: {},
-  learningSince: '',
-  isAuthenticated: false,
-  csrf_token: ''
+  username: '', // User's username
+  nativeLanguage: '', // User's selected native language
+  learningLanguages: {}, // User's list of learning languages. Key/value pair. Key is language, value is bool for active or not.
+  learningSince: '', // User's date of joining
+  isAuthenticated: false, // User authenticated or not flag
+  csrf_token: '' // Storing the csrf token received from backend
 }
 
 const mutations = {
