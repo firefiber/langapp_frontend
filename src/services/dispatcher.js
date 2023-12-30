@@ -1,9 +1,10 @@
+// TODO: The issue is with closing the tab and reopneing, giving a login screen. I guess the login sends the csrf header? as blank? Try using the regular axios instance or disabling csrf for login
 // TODO: Training, profile data request sent immediately after login. Rework so it's on the profile page, maybe?
 // TODO: Logout redirect happening on the dispatcher, maybe put a watch?
 
 import store from '@/store'
 import * as endpoints from '@/utils/endpoints'
-import router from '@/router'
+// import router from '@/router'
 
 /**
  * Service module for making API calls. Uses the Endpoints utility for the base call and adds extra params as needed.
@@ -32,8 +33,11 @@ export const sendAuthorization = async (username, password) => {
     const response = await endpoints.login(username, password)
     if (response.status === 200) {
       await store.dispatch('user/setAuthenticated', true)
-      // getUserProfileData()
-      // getUserTrainingData()
+      const csrfToken = response.data.csrfToken
+      console.log(response.data)
+      await store.dispatch('user/setCsrfToken', csrfToken)
+      await getUserTrainingData()
+      await getUserProfileData()
     }
   } catch (error) {
     errorHandler(error)
@@ -47,9 +51,9 @@ export const revokeAuthorization = async () => {
   try {
     const response = await endpoints.logout()
     if (response.status === 200) {
-      store.dispatch('user/resetUserData')
-      store.dispatch('session/resetSession')
-      router.push('/')
+      // await router.push('/')
+      await store.dispatch('user/resetUserData')
+      await store.dispatch('session/resetSession')
     }
   } catch (error) {
     errorHandler(error)
@@ -64,6 +68,11 @@ export const sendAuthentication = async () => {
     const response = await endpoints.authCheck()
     if (response.status === 200) {
       await store.dispatch('user/setAuthenticated', true)
+      const csrfToken = response.data.csrfToken
+      console.log(response.data)
+      await store.dispatch('user/setCsrfToken', csrfToken)
+      await getUserTrainingData()
+      await getUserProfileData()
     }
   } catch (error) {
     errorHandler(error)
@@ -78,7 +87,7 @@ export const sendRegistration = async (userData) => {
   try {
     const response = await endpoints.createUser(userData)
     if (response.status === 201) {
-      await store.dispatch('user/setAuthenticated', true)
+      await store.dispatch('user/setAuthenticated', false)
     }
   } catch (error) {
     errorHandler(error)

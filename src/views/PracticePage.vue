@@ -53,9 +53,9 @@
 </template>
 
 <script setup>
-import { computed, ref, onBeforeMount } from 'vue'
+import { computed, ref, onBeforeMount, watch } from 'vue'
 import { useStore } from 'vuex'
-import { sendSentenceComparison } from '@/services/dispatcher'
+import { getSession, sendSentenceComparison } from '@/services/dispatcher'
 import validators from '@/utils/validators'
 
 const store = useStore()
@@ -74,14 +74,15 @@ const showPlaceholder = ref(true)
 const buffer = computed(() => store.state.session.buffer)
 const currentItem = computed(() => buffer.value[0] || null)
 const comparisonResult = computed(() => store.state.session.comparisonResult)
+
 const permissionError = computed(() => store.getters['error/permissionError'])
 const generalError = computed(() => store.getters['error/generalError'])
 
-// watch(() => buffer.value.length, (newBuffer) => {
-//   if (newBuffer <= 5) {
-//     getSession()
-//   }
-// }, { immediate: true })
+watch(() => buffer.value.length, (newBuffer) => {
+  if (newBuffer <= 5) {
+    getSession()
+  }
+}, { immediate: true })
 
 const maxOpacity = 1
 const minOpacity = 0.1
